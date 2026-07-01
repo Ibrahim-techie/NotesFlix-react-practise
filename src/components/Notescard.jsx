@@ -1,7 +1,7 @@
 // NoteCard.jsx
 
 
-export function NoteCard({ title = "Note title", body = "Note body", date = "Just now" }) {
+export function NoteCard({ id=1, title = "Note title", body = "Note body", date = "Just now" , ondelete=null}) {
   return (
     <article className="w-full rounded-lg bg-white/5 border border-white/6 p-4 shadow-sm">
       <header className="flex items-start justify-between gap-4">
@@ -20,7 +20,8 @@ export function NoteCard({ title = "Note title", body = "Note body", date = "Jus
 
       <footer className="mt-4 flex items-center justify-end gap-2">
         <button className="text-xs text-indigo-400 hover:underline">Edit</button>
-        <button className="text-xs text-red-400 hover:underline">Delete</button>
+        <button className="text-xs text-red-400 hover:underline active:scale-95 cursor-pointer"
+        onClick={()=>ondelete(id)}>Delete</button>
       </footer>
     </article>
   );

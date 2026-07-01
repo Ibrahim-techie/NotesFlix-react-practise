@@ -1,111 +1,98 @@
 import { useState } from "react";
 import NotesList from "./components/Notelist";
 
-
-
 export default function App() {
+  const [heading, setheading] = useState("");
+  const [notes, setnotes] = useState([]);
+  const [text, settext] = useState("");
 
-const [heading, setheading] = useState("");
-const [notes, setnotes] = useState([]);
-const [text, settext] = useState("");
-
-const formsubmit=(e)=>{
-  e.preventDefault(); 
- const newNote = {
+  const formsubmit = (e) => {
+    e.preventDefault();
+    const newNote = {
       id: Date.now(),
       title: heading,
       body: text,
       date: new Date().toLocaleString(),
     };
 
-setnotes((prev)=>[...prev,newNote])
-setheading("");
-settext("");
-  
-  
+    setnotes((prev) => [...prev, newNote]);
+    setheading("");
+    settext("");
+  };
 
-  
+  const deletenote=(id)=>{
+    setnotes((prev)=>prev.filter((n)=>n.id!==id))
   }
+  
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <main className="max-w-3xl mx-auto">
-        <form className="space-y-12" onSubmit={formsubmit}>
-          <section className="border-b border-white/10 pb-12">
-            <div
-              id="image"
-              className="rounded-md overflow-hidden bg-gray-800 bg-cover bg-center"
-            >
-              <div className="p-8">
-                <h1 className="text-5xl font-bold tracking-wide leading-tight ">
-                  Notesapp
-                </h1>
+ return (
+  <div className="min-h-screen bg-[#141414] text-white">
+    <main className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 p-8">
+      {/* Form */}
+      <form
+        onSubmit={formsubmit}
+        className="w-full lg:w-2/3 bg-[#1f1f1f] rounded-md p-8"
+      >
+        <h1 className="text-4xl font-bold text-red-600 mb-8">
+          NotesFlix
+        </h1>
 
-                <div className="mt-10 mb-12">
-                  <div className="sm:col-span-4">
-                    <label
-                      htmlFor="username"
-                      className="block text-xl font-medium text-white mb-2"
-                    >
-                      Heading of the note
-                    </label>
+        <div className="mb-6">
+          <label
+            htmlFor="username"
+            className="block mb-2 text-sm font-medium text-gray-300"
+          >
+            Title
+          </label>
 
-                    <div className="mt-2">
-                      <div className="flex items-center rounded-md bg-white/5 pl-3 outline outline-white/10 focus-within:outline-2 focus-within:outline-indigo-500">
-                        <input
-                          id="username"
-                          name="username"
-                          type="text"
-                          placeholder="Write the heading here"
-                          className="block min-w-0 grow bg-transparent py-1.5 pr-3 pl-1 text-base text-white placeholder:text-gray-500 focus:outline-none"
-                          value={heading}
-                          onChange={(e)=>{
-                            setheading(e.target.value);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
+          <input
+            id="username"
+            type="text"
+            value={heading}
+            onChange={(e) => setheading(e.target.value)}
+            placeholder="Enter note title..."
+            className="w-full rounded bg-[#2b2b2b] border border-gray-700 px-4 py-3 text-white placeholder-gray-500 focus:border-red-600 focus:outline-none"
+          />
+        </div>
 
-                  <div className="col-span-full mt-8">
-                    <label
-                      htmlFor="about"
-                      className="block text-xl font-medium text-white mb-2"
-                    >
-                      Notes
-                    </label>
+        <div className="mb-8">
+          <label
+            htmlFor="about"
+            className="block mb-2 text-sm font-medium text-gray-300"
+          >
+            Notes
+          </label>
 
-                    <div className="mt-2">
-                      <textarea
-                        id="about"
-                        name="about"
-                        rows={6}
-                        value={text}
-                        placeholder="write about it here..."
-                        className="block w-full rounded-md bg-white/5 px-3 py-2 text-base text-white outline-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:outline-indigo-500"
-                        onChange={(e)=>{
-                            settext(e.target.value);
-                          }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <textarea
+            id="about"
+            rows={8}
+            value={text}
+            onChange={(e) => settext(e.target.value)}
+            placeholder="Write something..."
+            className="w-full rounded bg-[#2b2b2b] border border-gray-700 px-4 py-3 text-white placeholder-gray-500 focus:border-red-600 focus:outline-none resize-none"
+          />
+        </div>
 
-          <section>
-            <button
-              type="submit"
-              className="w-full rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-600 transition"
-            >
-              Save
-            </button>
-          </section>
-        </form>
+        <button
+          type="submit"
+          className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-medium transition-colors"
+        >
+          Save Note
+        </button>
+      </form>
 
-        <NotesList notes={notes} />
-      </main>
-    </div>
-  );
+      {/* Notes */}
+      <div className="w-full lg:w-1/3 bg-[#1f1f1f] rounded-md p-6">
+        <h2 className="text-xl font-semibold text-red-600 mb-5">
+          My Notes
+        </h2>
+
+        <NotesList
+          notes={notes}
+          ondelete={deletenote}
+        />
+      </div>
+    </main>
+  </div>
+);
 }
