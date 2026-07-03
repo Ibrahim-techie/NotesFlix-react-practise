@@ -4,7 +4,7 @@ import NotesList from "./components/Notelist";
 export default function App() {
   const [heading, setheading] = useState("");
   const [text, settext] = useState("");
-
+  const [editingId, setEditingId] = useState(null);
   const [notes, setnotes] = useState(() => {
     const raw = localStorage.getItem("notes");
     if (!raw) return [];
@@ -22,20 +22,47 @@ export default function App() {
 
   const formsubmit = (e) => {
     e.preventDefault();
-    const newNote = {
-      id: Date.now(),
-      title: heading,
-      body: text,
-      date: new Date().toLocaleString(),
-    };
 
-    setnotes((prev) => [...prev, newNote]);
+    if (editingId) {
+      setnotes((prev) =>
+        prev.map((n) =>
+          n.id === editingId
+            ? {
+                ...n,
+                title: heading,
+                body: text,
+                date: new Date().toLocaleString(),
+              }
+            : n,
+        ),
+      );
+      setEditingId(null);
+    } else {
+      const newNote = {
+        id: Date.now(),
+        title: heading,
+        body: text,
+        date: new Date().toLocaleString(),
+      };
+      setnotes((prev) => [...prev, newNote]);
+    }
+
     setheading("");
     settext("");
   };
 
   const deletenote = (id) => {
     setnotes((prev) => prev.filter((n) => n.id !== id));
+  };
+
+  const editingnote = (id) => {
+    const note = notes.find((el) => el.id == id);
+    if (note) {
+      setheading(note.title);
+      settext(note.body);
+      setheading(note.title);
+      setEditingId(id);
+    }
   };
 
   return (
@@ -85,7 +112,7 @@ export default function App() {
 
           <button
             type="submit"
-            className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-medium transition-colors"
+            className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded font-medium transition-colors cursor-pointer hover:scale-95"
           >
             Save Note
           </button>
@@ -94,7 +121,7 @@ export default function App() {
         <div className="w-full lg:w-1/3 bg-[#1f1f1f] rounded-md p-6">
           <h2 className="text-xl font-semibold text-red-600 mb-5">My Notes</h2>
 
-          <NotesList notes={notes} ondelete={deletenote} />
+          <NotesList notes={notes} ondelete={deletenote} onedit={editingnote} />
         </div>
       </main>
     </div>

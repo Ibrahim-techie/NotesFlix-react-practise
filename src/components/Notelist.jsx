@@ -1,6 +1,6 @@
 import { NoteCard } from "./Notescard";
 
-export default function NotesList({notes,ondelete}) {
+export default function NotesList({notes,ondelete,onedit}) {
   
 
  
@@ -12,7 +12,7 @@ export default function NotesList({notes,ondelete}) {
       <div className="grid grid-cols-1 gap-4">
         {notes?
         notes.map((n) => (
-          <NoteCard key={n.id} id ={n.id} title={n.title} body={n.body} date={n.date} ondelete={ondelete}/>
+          <NoteCard key={n.id} id ={n.id} title={n.title} body={n.body} date={n.date} ondelete={ondelete} onedit={onedit}/>
         )):<p className="text-xl text-gray-400">No notes yet — your saved notes will appear here.</p>
 
 }
